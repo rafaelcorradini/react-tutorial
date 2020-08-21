@@ -1,25 +1,20 @@
 {
-  "name": "docz-example-basic",
+  "name": "react-tutorial",
   "version": "2.0.0",
   "license": "MIT",
   "scripts": {
     "dev": "docz dev",
     "build": "docz build",
     "serve": "docz serve",
-    "lint": "eslint .",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d .docz/build"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint"
-    }
+    "deploy": "gh-pages -d .docz/dist"
   },
   "dependencies": {
-    "docz": "latest",
+    "docz": "^1.3.2",
+    "docz-theme-default": "^1.2.0",
     "prop-types": "^15.7.2",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
@@ -33,7 +28,6 @@
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-mdx": "^1.7.1",
-    "gh-pages": "^2.2.0",
-    "husky": "^4.2.5"
+    "gh-pages": "^2.2.0"
   }
 }

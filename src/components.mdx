@@ -1,0 +1,58 @@
+---
+name: Componentes
+route: /components
+---
+
+import { Playground } from 'docz'
+
+# Componentes
+
+## Os dois tipos
+
+Existem dois tipos de componentes no React: de função e de classe.
+
+O componente de função é mais simples e, com a introdução dos hooks(https://pt-br.reactjs.org/docs/hooks-intro.html) pode-se utilizar esse tipo de componente em quase todos os casos, portanto esse é o que recomendo e vou usar na maioria dos exemplos desse tutorial:
+
+```jsx
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+```
+
+Essa função é um componente React válido porque aceita um único argumento de objeto “props” (que significa propriedades) com dados e retorna um elemento React. É literalmente uma função JavaScript.
+
+O componente de classe é uma classe ES6, este seria um componente equivalente ao mostrado acima:
+
+```jsx
+class Welcome extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}</h1>;
+  }
+}
+```
+
+## Utilizando componentes
+
+Componentes podem se referir a outros componentes em sua saída. Isso nos permite usar a mesma abstração de componente para qualquer nível de detalhe. Um botão, um formulário, uma caixa de diálogo, uma tela: em aplicativos React, todos esses são normalmente expressos como componentes.
+
+Por exemplo, nós podemos criar um componente que renderiza Welcome muitas vezes:
+
+<Playground>
+  {() => {
+    function Welcome(props) {
+      return <h1>Hello, {props.name}</h1>;
+    }
+
+    return (
+      <div>
+        <Welcome name="Sara" />
+        <Welcome name="Cahal" />
+        <Welcome name="Edite" />
+      </div>
+    )
+  }}
+</Playground>
+
+## Referências
+
+https://pt-br.reactjs.org/docs/components-and-props.html

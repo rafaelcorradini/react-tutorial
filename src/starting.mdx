@@ -1,0 +1,230 @@
+---
+name: Começando
+route: /comecando
+---
+
+import { Playground } from 'docz'
+
+# Começando
+
+Existem diversas maneiras de utilizar React, vou te mostrar algumas delas nesse tutorial.
+
+## HTML estático
+
+Como já foi dito, React é uma lib javascript, então você pode simplesmente importá-lo no código através de um CDN.
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Tutorial React</title>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      ReactDOM.render(
+        <h1>Olá, world!</h1>,
+        document.getElementById('root')
+      );
+    </script>
+  </body>
+</html>
+```
+
+Você deve ter notado que o React é divido em duas bibliotecas, essa divisão aconteceu depois da versão v15.4.0 (https://reactjs.org/blog/2016/11/16/react-v15.4.0.html), antes disso todas as funcionalidades do ReactDOM faziam parte do React.
+ReactDOM é a "cola" entre o React e o DOM. Muitas vezes, você só vai utilizá-lo para uma única coisa: a montagem com ReactDOM.render().
+
+A principal razão dessa divisão foi a chegada do React Native. A lib React contém funcionalidades utiizadas em aplicativos web e mobile. Enquanto a lib ReactDOM é utilizada apenas em aplicações web.
+
+Outra coisa que talvez você tenha notado, o script adicionado no body não é javascript puro, e sim JSX, por isso é necessária a importação do babel.
+
+Babel é a principal ferramenta usada para pré-processar JavaScript. Babel é um parser altamente configurável que permite que usemos features experimentais e extensões, compilando de volta para o JavaScript antigo que pode ser suportado em uma ampla quantidade de plataformas. Se uma plataforma não suporta nativamente uma feature ES6 como Map(), o Babel pode replicar as APIs que faltam para prover essa funcionalidade. Além disso, o babel pode ser utilizado para pré-processar o JSX e o transformar e javascript puro para que o navegador entenda.
+
+## JSX
+
+```jsx
+  const element = <h1>Olá, world!</h1>;
+```
+
+Esse é um trecho de código em JSX, a sintaxe é uma mistura entre html e javascript.
+
+JSX é uma extensão da sintaxe do javascript. Recomenda-se o uso do JSX com o React para descrever como a UI deve parecer.
+
+O React adota o fato de que a lógica de renderização é inerentemente acoplada com outras lógicas de UI: como eventos são manipulados, como o state muda com o tempo e como os dados são preparados para exibição.
+
+Ao invés de separar tecnologias artificialmente colocando markup e lógica em arquivos separados, o React separa conceitos com unidades pouco acopladas chamadas “componentes” que contém ambos. Voltaremos aos componentes em outra seção. Mas, se você ainda não está confortável em usar markup em JS, esta palestra pode convencer você do contrário.
+
+Você pode inserir qualquer expressão JavaScript válida dentro das chaves em JSX. Por exemplo, 2 + 2, user.name, ou formatName(name) são todas expressões JavaScript válidas.
+
+```jsx
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Tutorial React</title>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      function formatName(user) {
+        return `${user.firstName} ${user.lastName}`
+      }
+
+      const name = {
+        firstName: 'Bolso',
+        lastName: 'Lula'
+      }
+      const element = <h1>Olá, {formatName(name)}</h1>
+
+      ReactDOM.render(
+        element,
+        document.getElementById('root')
+      );
+    </script>
+  </body>
+</html>
+```
+
+<Playground>
+  {() => {
+    const formatName = (user) => `${user.firstName} ${user.lastName}`
+    const user = {
+      firstName: 'Bolso',
+      lastName: 'Lula'
+    }
+    return <h1>Olá, {formatName(user)}</h1>
+  }}
+</Playground>
+
+## create-react-app
+
+A maneira mais comum de se iniciar uma aplicação react é utilizar a lib create-react-app e seus scripts.
+Essa lib vem com tudo que você precisa para começar um React app.
+
+https://github.com/facebook/create-react-app
+
+
+```shell
+npx create-react-app meu-app
+cd meu-app
+npm start
+```
+
+Basta executar o script create-react-app e uma pasta será criada com uma estrutura inicial para se iniciar um projeto React.
+O create-react-app tem vários scripts prontos para testes, eslint, entre outras coisas.
+Ele criará um servidor com live reload, usará Webpack e Babel para compilar automaticamente React, JSX e ES6, prefixará arquivos CSS automaticamente, usará ESLint para testar e alertar sobre erros no código e usará Jest para executar testes unitários.
+Todas essas configurações ficam "escondidas" dentro da lib, você nem precisa lidar com elas, é só usar.
+
+
+```
+meu-app
+├── README.md
+├── node_modules
+├── package.json
+├── .gitignore
+├── public
+│   ├── favicon.ico
+│   ├── index.html
+│   └── manifest.json
+└── src
+    ├── App.css
+    ├── App.js
+    ├── App.test.js
+    ├── index.css
+    ├── index.js
+    ├── logo.svg
+    └── serviceWorker.js
+    └── setupTests.js
+```
+
+
+Em /public fica o index.html, que é muito semelhante ao arquivo index.html estático que criamos anteriormente - apenas uma div raiz. Desta vez, não iremos alterar nada nesse arquivo, ele já vem pronto.
+
+O diretório /src contém todo o nosso código React. Dentro dessa pasta você encontra dois arquivos importantes. O index.js, que é o arquivo onde fica o ReactDOM.render(<App /\>). E o App.js, o componente que será o root da aplicação.
+
+Você verá nesse componente algo do tipo:
+
+```jsx
+import React from 'react';
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+
+Você pode alterar o App.js e escrever o mesmo código que escrevemos anteriormente:
+
+```jsx
+import React from 'react';
+
+function App() {
+  const formatName = (user) => `${user.firstName} ${user.lastName}`
+  const user = {
+    firstName: 'Bolso',
+    lastName: 'Lula'
+  }
+  return <h1>Olá, {formatName(user)}</h1>
+}
+
+export default App;
+```
+
+
+<Playground>
+  {() => {
+    const formatName = (user) => `${user.firstName} ${user.lastName}`
+    const user = {
+      firstName: 'Bolso',
+      lastName: 'Lula'
+    }
+    return <h1>Olá, {formatName(user)}</h1>
+  }}
+</Playground>
+
+<a href="/components" style={{ fontSize: 32 }}>Próximo: Bora aprender sobre componentes</a>
+
+## Referências
+
+https://pt-br.reactjs.org/docs/cdn-links.html
+
+https://www.taniarascia.com/getting-started-with-react/
+
+https://desenvolvedor.expert/o-que-eh-es6-66c8d7631a0b
+
+https://github.com/facebook/create-react-app
