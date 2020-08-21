@@ -1,4 +1,6 @@
-# Basic Docz example
+# O básico do react
+
+Tutorial(Em andamento) sobre o básico do react escrito utilizando o docz.
 
 ## Using `create-docz-app`
 
