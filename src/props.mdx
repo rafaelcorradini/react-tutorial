@@ -1,0 +1,63 @@
+---
+name: Props
+route: /props
+---
+
+import { Playground } from 'docz'
+
+# Props
+
+## O que são
+
+Props, que é uma abreviação de properties, ou propriedades, são informações que podem ser passadas para um componente. Pode ser uma string, um número, uma função ou até mesmo outro componente. Este valor pode então ser utilizado pelo componente que a recebe.
+
+## Exemplos
+
+### Exemplo com função
+
+<Playground>
+  {() => {
+    function Welcome(props) {
+      return <h1>Hello, {props.name}</h1>
+    }
+
+    return (
+      <div>
+        <Welcome name="Sara" />
+        <Welcome name="Cahal" />
+        <Welcome name="Edite" />
+      </div>
+    )
+  }}
+</Playground>
+
+
+### Exemplo com classes
+
+<Playground>
+  {() => {
+    class Welcome extends React.Component {
+      render() {
+        return <h1>Hello {this.props.name}</h1>
+      }
+    }
+
+    return (
+      <div>
+        <Welcome name="Sara" />
+        <Welcome name="Cahal" />
+        <Welcome name="Edite" />
+      </div>
+    )
+  }}
+</Playground>
+
+## Props são read-only
+
+Quer você declare um componente como uma função ou uma classe, ele nunca deve modificar suas props.
+
+Todos os componentes do React devem agir como funções puras em relação a suas props.
+
+## Referências
+
+https://pt-br.reactjs.org/docs/components-and-props.html

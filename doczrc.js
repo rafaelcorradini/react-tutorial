@@ -3,11 +3,15 @@ export default {
   menu: [
     {
       name: 'Introdução',
-      manue: 'index'
+      menu: 'index'
     },
     {
       name: 'Começando',
-      manue: 'starting'
+      menu: 'starting'
+    },
+    {
+      name: 'Começando',
+      menu: 'starting'
     }
   ],
   themeConfig: {

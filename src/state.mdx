@@ -1,0 +1,499 @@
+---
+name: States, lifecycle e hooks
+route: /states
+---
+
+import { Playground } from 'docz'
+import { useState, useEffect } from 'react'
+
+# State, lifecycle e hooks
+
+Como já foi mecionado neste tutorial, existem dois tipos de componentes (de classes e de função), portanto existem duas formas diferentes de se controlar estados no react. Vamos apresentar as duas maneiras, mas primeiro vamos entender o que é state.
+
+## State
+
+O state (estado) de um componente React tem uma função muito simples e específica. Ele é uma propriedade do componente onde colocamos dados que, quando mudados, devem causar uma nova renderização. Simples assim. Se deve causar mudança fica no estado, se não deve, não fica.
+
+É importante ter um bom entendimento sobre a diferença entre state e props: o state é utilizado para valores dinâmicos e props são utilizadas para passar valores entre componentes.
+Esses dois conceitos não são mutuamente excludentes, muito pelo contrario. Props e state são usados em conjunto.
+
+## Utilizando Classes
+
+Vamos começar com um exemplo, primeiro vamos criar uma classe e declarar um estado inicial.
+
+Veja que o estado inicial do contador é 0 e ele é renderizado dentro do <p\>.
+
+<Playground>
+  {() => {
+    class Counter extends React.Component {
+      constructor() {
+        this.state = { counter: 0 }
+      }
+
+      render() {
+        const { counter } = this.state
+
+        return (
+          <div>
+            <p>Contador: {counter}</p>
+          </div>
+        )
+      }
+    }
+
+    return <Counter />
+  }}
+</Playground>
+
+Agora vamos adicionar um método na classe, que quando chamado irá alterar o estado:
+
+<Playground>
+  {() => {
+    class Counter extends React.Component {
+      constructor() {
+        this.state = { counter: 0 }
+
+        // Bind é necessário para fazer `this` funcionar no callback
+        this.increaseCounter = this.increaseCounter.bind(this)
+      }
+
+      increaseCounter() {
+        const { counter } = this.state
+        this.setState({ counter: counter + 1 })
+      }
+
+      render() {
+        const { counter } = this.state
+  
+        return (
+          <div>
+            <p>Contador: {this.state.counter}</p>
+          </div>
+        )
+      }
+    }
+
+    return <Counter />
+  }}
+</Playground>
+
+
+Vamos chamar esse método quando o botão for clicado:
+
+
+<Playground>
+  {() => {
+    class Counter extends React.Component {
+      constructor() {
+        this.state = { counter: 0 }
+
+        // Bind é necessário para fazer `this` funcionar no callback
+        this.increaseCounter = this.increaseCounter.bind(this)
+      }
+
+      increaseCounter() {
+        const { counter } = this.state
+        this.setState({ counter: counter + 1 })
+      }
+
+      render() {
+        const { counter } = this.state
+    
+        return (
+          <div>
+            <p>Contador: {counter}</p>
+            <button onClick={this.increaseCounter}>incrementar</button>
+          </div>
+        )
+      }
+    }
+
+    return <Counter />
+  }}
+</Playground>
+
+## lifecycle
+
+
+Vamos utilizar um outro exemplo para mostrar como o lifecycle (clico de vida) de um componente funciona.
+
+Começaremos pelo componentDidMount.
+
+## componentDidMount
+
+O método componentDidMount() é executado depois que a saída do componente é renderizada no DOM.
+Por isso, esse é método é bastante usado para fazer chamadas de API, por exemplo.
+
+
+
+<Playground>
+  {() => {
+    async function mockRequest() {
+      return [
+        {
+          id: 1,
+          name: 'produto teste 1',
+          description: 'lorem ispum',
+        },
+        {
+          id: 2,
+          name: 'produto teste 2',
+          description: 'lorem ispum',
+        }
+      ]
+    }
+
+    class ProductList extends React.Component {
+      constructor() {
+        this.state = {
+          products: []
+        }
+      }
+
+      componentDidMount() {
+        mockRequest().then(products => this.setState({ products }))
+      }
+
+      render() {
+        const { products } = this.state
+    
+        return (
+          <div>
+            {products.map((product) => (
+              <div key={product.id}>{product.name}</div>
+            ))}
+          </div>
+        )
+      }
+    }
+
+    return <ProductList />
+  }}
+</Playground>
+
+
+## ComponentDidUpdate
+
+ComponentDidUpdate é executado quando o componente é atualizado no DOM. Este método é usado para reativar as bibliotecas de terceiros, usado para garantir que essas bibliotecas também atualizem e recarreguem. Ao chamar this.setState, na mudança de estado, ou na mudança de alguma prop, esse método é chamado.
+
+
+<Playground>
+  {() => {
+    class Counter extends React.Component {
+      constructor() {
+        this.state = { counter: 0 }
+
+        // Bind é necessário para fazer `this` funcionar no callback
+        this.increaseCounter = this.increaseCounter.bind(this)
+      }
+
+      increaseCounter() {
+        const { counter } = this.state
+        this.setState({ counter: counter + 1 })
+      }
+
+      componentDidUpdate() {
+        const { counter } = this.state
+        // o contador será resetado ao chegar no 10
+        if (counter === 10) {
+          this.setState({ counter: 0 })
+        }
+      }
+
+      render() {
+        const { counter } = this.state
+  
+        return (
+          <div>
+            <p>Contador: {this.state.counter}</p>
+            <button onClick={this.increaseCounter}>incrementar</button>
+          </div>
+        )
+      }
+    }
+
+    return <Counter />
+  }}
+</Playground>
+
+Outro método do ciclo de vida bastante utilizado é o componentDidUpdate, que é executado quando o componente é atualizado no DOM. Este método é usado para reativar as bibliotecas de terceiros, usado para garantir que essas bibliotecas também atualizem e recarreguem. Ao chamar this.setState, na mudança de estado, ou na mudança de alguma prop, esse método é chamado.
+
+## componentWillUnmount
+
+componentWillUnmount é importante em aplicações mais complexas, onde alguns serviços precisam ser "destruídos" ao desmontar um componente, para que a memória seja desalocada.
+
+## Utilizando hooks
+
+Hooks são uma nova adição ao React 16.8. Eles permitem que você use o state e outros recursos do React sem escrever uma classe.
+
+Hooks são funções que permitem a você “ligar-se” aos recursos de state e ciclo de vida do React a partir de componentes funcionais. Hooks não funcionam dentro de classes — eles permitem que você use React sem classes.
+
+O controle de estado utilizando hooks, é mais simples e torna o código mais limpo e mais fácil de ser reutilizado.
+
+Leia um pouco sobre a motivação da introdução dos hooks na documentação: https://pt-br.reactjs.org/docs/hooks-intro.html#motivation.
+
+Vamos começar com o exemplo do contador, equivalente ao que fizemos usando classes.
+
+Vamos declarar um estado inicial para o contador, que iniciará em 0.
+
+Para isso, devemos importar a função useState, que é um Hook. Nós o chamamos dentro de um componente funcional para adicionar alguns states locais a ele. React irá preservar este state entre re-renderizações. useState retorna um par: o valor do state atual e uma função que permite atualizá-lo. Você pode chamar essa função a partir de um manipulador de evento ou de qualquer outro lugar. É parecido com this.setState em uma classe, exceto que não mescla o antigo state com o novo. (Nós iremos mostrar um exemplo comparando useState com this.state em Utilizando o State Hook.)
+
+O único argumento para useState é o state inicial. No exemplo abaixo, é 0 porque nosso contador começa do zero. Perceba que diferente de this.state, o state não precisa ser um objeto — apesar de que pode ser se você quiser. O argumento de state inicial é utilizado apenas durante a primeira renderização.
+
+
+
+```javascript
+import React, { useState } from 'react'
+```
+
+<Playground>
+  {() => {
+    function Counter(props) {
+      const [counter, setCounter] = useState(0)
+
+      return (
+        <div>
+          <p>Contador: {counter}</p>
+        </div>
+      )
+    }
+
+    return <Counter />
+  }}
+</Playground>
+
+
+Agora vamos fazer a mesmo interface do exemplo de classes, ao clicar no botão incrementamos o contador.
+
+
+<Playground>
+  {() => {
+    function Counter(props) {
+      const [counter, setCounter] = useState(0)
+
+      const increaseCounter = () => setCounter(counter + 1)
+
+      return (
+        <div>
+          <p>Contador: {counter}</p>
+          <button onClick={increaseCounter}>incrementar</button>
+        </div>
+      )
+    }
+
+    return <Counter />
+  }}
+</Playground>
+
+
+## useEffect
+
+O Hook de Efeito, useEffect, adiciona a funcionalidade de executar efeitos colaterais através de um componente funcional. Segue a mesma finalidade do componentDidMount, componentDidUpdate, e componentWillUnmount em classes React, mas unificado em uma mesma API.
+
+Vamos usar o mesmo exemplo das classes.
+
+```javascript
+import React, { useEffect, useState } from 'react'
+```
+
+<Playground>
+  {() => {
+    async function mockRequest() {
+      return [
+        {
+          id: 1,
+          name: 'produto teste 1',
+          description: 'lorem ispum',
+        },
+        {
+          id: 2,
+          name: 'produto teste 2',
+          description: 'lorem ispum',
+        }
+      ]
+    }
+
+    function ProductsList(props) {
+      const [products, setProducts] = useState([])
+
+      async function fetchProducts() {
+        const products = await mockRequest()
+        setProducts(products)
+      }
+
+      useEffect(() => {
+        fetchProducts()
+      }, [])
+
+      return (
+        <div>
+          {products.map((product) => (
+            <div key={product.id}>{product.name}</div>
+          ))}
+        </div>
+      )
+    }
+
+    return <ProductsList />
+  }}
+</Playground>
+
+
+Quando você chama useEffect, você está dizendo ao React para executar a sua função de “efeito” após liberar as mudanças para o DOM. Efeitos são declarados dentro do componente, para que eles tenham acesso as suas props e state. Por padrão, React executa os efeitos após cada renderização — incluindo a primeira renderização.
+
+
+O segundo argmento do useEffect diz respeita a quando ele deve executar, se você passar um array com algumas props ou states para esse argumento, a função do useEffect será chamada quando essas props/states forem atualizadas, se passar um array vazio a função será chamada apenas ao montar o componente. Essa funcionalidade seria equivalente ao componentDidUpdate.
+
+
+Agora outro utilizando state, parecido com o exemplo apresentado em classes para o componentDidUpdate.
+
+
+<Playground>
+  {() => {
+    function Counter(props) {
+      const [counter, setCounter] = useState(0)
+
+      const increaseCounter = () => setCounter(counter + 1)
+
+      useEffect(() => {
+        if (counter === 10) {
+          setCounter(0)
+        }
+      }, [counter])
+
+      return (
+        <div>
+          <p>Contador: {counter}</p>
+          <button onClick={increaseCounter}>incrementar</button>
+        </div>
+      )
+    }
+
+    return <Counter />
+  }}
+</Playground>
+
+
+Agora um exemplo utilizando as props.
+
+
+<Playground>
+  {() => {
+    async function mockRequest(productId) {
+      const products = [
+        {
+          id: 1,
+          name: 'produto teste 1',
+          description: 'lorem ispum',
+        },
+        {
+          id: 2,
+          name: 'produto teste 2',
+          description: 'lorem ispum',
+        }
+      ]
+      return products.find(item => item.id === productId)
+    }
+
+    function ProductInfo(props) {
+      const [product, setProduct] = useState({})
+
+      async function fetchProductById(productId) {
+        const product = await mockRequest(productId)
+        setProduct(product)
+      }
+
+      useEffect(() => {
+        fetchProductById(props.productId)
+      }, [props.productId])
+
+      return (
+        <div>
+          <div>{product.name} - {product.description}</div>
+        </div>
+      )
+    }
+
+    function Products() {
+      const [productId, setProductId] = useState(1)
+
+      function switchProduct(id) {
+        setProductId(id)
+      }
+
+      return (
+        <div>
+          <p>Qual produto deseja visualizar?</p>
+          <button onClick={() => switchProduct(1)}>Renderizar produto 1</button>
+          <button onClick={() => switchProduct(2)}>Renderizar produto 2</button>
+          <ProductInfo productId={productId} />
+        </div>
+      )
+
+    }
+
+    return <Products />
+    
+  }}
+</Playground>
+
+
+Efeitos também podem opcionalmente especificar como “limpar” (clean up) retornando uma função após a execução deles. Seria o equivalente ao componentWillUnmount.
+
+
+<Playground>
+  {() => {
+    async function mockRequest() {
+      return [
+        {
+          id: 1,
+          name: 'produto teste 1',
+          description: 'lorem ispum',
+        },
+        {
+          id: 2,
+          name: 'produto teste 2',
+          description: 'lorem ispum',
+        }
+      ]
+    }
+
+    function ProductsList(props) {
+      const [products, setProducts] = useState([])
+
+      async function fetchProducts() {
+        const products = await mockRequest()
+        setProducts(products)
+      }
+
+      useEffect(() => {
+        fetchProducts()
+
+        // isso será executado quando o componente for desmontar
+        return () => {
+          setProducts([])
+        }
+      }, [])
+      // quando quiser que o useEffect seja chamado
+
+      return (
+        <div>
+          {products.map((product) => (
+            <div key={product.id}>{product.name}</div>
+          ))}
+        </div>
+      )
+    }
+
+    return <ProductsList />
+  }}
+</Playground>
+
+
+## Referências
+
+https://pt-br.reactjs.org/docs/components-and-props.html
+
+https://medium.com/@dimascyriaco_29717/entendendo-o-estado-no-react-ac1e5c32b0c0
+
+https://medium.com/creditas-tech/m%C3%A9todos-do-ciclo-de-vida-de-componentes-reactjs-um-mergulho-profundo-332ed7b3b782
